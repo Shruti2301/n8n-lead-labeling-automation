@@ -1,7 +1,8 @@
-
 # 🧠 n8n Lead Labeling Automation
-I Automated My Lead Inbox with n8n — and It Now Sorts Itself! 
-![Workflow Preview](./Image1.jpg)
+
+I Automated My Lead Inbox with n8n — and It Now Sorts Itself!  
+
+![Workflow Preview](Image1.jpg)
 
 This project is a no-code automation built with [n8n](https://n8n.io) that:
 - Automatically sends email notifications on form submission
