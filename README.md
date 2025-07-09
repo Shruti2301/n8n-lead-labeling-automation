@@ -2,7 +2,7 @@
 
 I Automated My Lead Inbox with n8n — and It Now Sorts Itself!  
 
-![Workflow Preview](Image1.jpg)
+![Workflow Preview](Image1.png)
 
 This project is a no-code automation built with [n8n](https://n8n.io) that:
 - Automatically sends email notifications on form submission
