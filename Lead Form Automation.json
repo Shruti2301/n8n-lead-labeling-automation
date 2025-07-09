@@ -1,0 +1,395 @@
+{
+  "name": "Lead Form Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Lead Form",
+        "formDescription": "Form for new leads for my automation agency.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "placeholder": "Shruti Mandaokar"
+            },
+            {
+              "fieldLabel": "What do you want automated?",
+              "fieldType": "textarea",
+              "placeholder": "Describe your project goal here.",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "What is your time frame?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "1-3 months"
+                  },
+                  {
+                    "option": "3-6 months"
+                  },
+                  {
+                    "option": "6-9 months"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "What is your project budget?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "$997-$2997"
+                  },
+                  {
+                    "option": "$2997-$4997"
+                  },
+                  {
+                    "option": "$4997-$9997"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c3f0be76-f80b-4a29-9efc-c12311006963",
+      "name": "On form submission",
+      "webhookId": "fd5f3169-ddf4-4586-bdc5-fe83e334170a"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json['What is your project budget?'] }}",
+                    "rightValue": "$997-$2997",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "fb446299-d5f9-4ec5-b514-aa9038d45e82"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "low budget"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "74ad7a22-99d8-44fe-9e49-ef9ea67c4e1c",
+                    "leftValue": "={{ $json['What is your project budget?'] }}",
+                    "rightValue": "$2997-$4997",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "medium budget"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f5e62ad0-947b-4d20-b92c-6bcba1d9504d",
+                    "leftValue": "={{ $json['What is your project budget?'] }}",
+                    "rightValue": "$4997-$9997",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "high budget"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "a8ea93d3-9f9c-4cb1-8ee4-b2639c1adcd8",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "sendTo": "shrutimandaokar2301@gmail.com",
+        "subject": "=New Automation Lead {{ $('On form submission').item.json['Full Name'] }} ",
+        "emailType": "text",
+        "message": "=Hey there Shruti, you got a new lead !\n\nThere name is :\n{{ $('On form submission').item.json['Full Name'] }}\n\nTheir Project is :\n{{ $('On form submission').item.json['What do you want automated?'] }}\n\nTheir time frame of project is :\n{{ $('On form submission').item.json['What is your time frame?'] }}\n\nTheir project budget is :\n{{ $('On form submission').item.json['What is your project budget?'] }}\n\nThey submitted it at :\n{{ $('On form submission').item.json.submittedAt }}\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        520,
+        -240
+      ],
+      "id": "8f85b075-fee8-44ed-8cad-272812c0449f",
+      "name": "Send a message",
+      "webhookId": "a5f15422-fdca-49ed-8c87-7ac4da6ec54c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "m6WAIGIYybcPUBo7",
+          "name": "Test Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "shrutimandaokar2301@gmail.com",
+        "subject": "=New Automation Lead {{ $('On form submission').item.json['Full Name'] }} ",
+        "emailType": "text",
+        "message": "=Hey there Shruti, you got a new lead !\n\nThere name is :\n{{ $('On form submission').item.json['Full Name'] }}\n\nTheir Project is :\n{{ $('On form submission').item.json['What do you want automated?'] }}\n\nTheir time frame of project is :\n{{ $('On form submission').item.json['What is your time frame?'] }}\n\nTheir project budget is :\n{{ $('On form submission').item.json['What is your project budget?'] }}\n\nThey submitted it at :\n{{ $('On form submission').item.json.submittedAt }}\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        520,
+        0
+      ],
+      "id": "afdefb5b-4a0b-4a18-96d4-53d2e4603b08",
+      "name": "Send a message1",
+      "webhookId": "a5f15422-fdca-49ed-8c87-7ac4da6ec54c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "m6WAIGIYybcPUBo7",
+          "name": "Test Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "shrutimandaokar2301@gmail.com",
+        "subject": "=New Automation Lead {{ $('On form submission').item.json['Full Name'] }} ",
+        "emailType": "text",
+        "message": "=Hey there Shruti, you got a new lead !\n\nThere name is :\n{{ $('On form submission').item.json['Full Name'] }}\n\nTheir Project is :\n{{ $('On form submission').item.json['What do you want automated?'] }}\n\nTheir time frame of project is :\n{{ $('On form submission').item.json['What is your time frame?'] }}\n\nTheir project budget is :\n{{ $('On form submission').item.json['What is your project budget?'] }}\n\nThey submitted it at :\n{{ $('On form submission').item.json.submittedAt }}\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        520,
+        180
+      ],
+      "id": "6ff7adf3-9b97-4d47-8453-3625fb434539",
+      "name": "Send a message2",
+      "webhookId": "a5f15422-fdca-49ed-8c87-7ac4da6ec54c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "m6WAIGIYybcPUBo7",
+          "name": "Test Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_1190307676484890179"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        740,
+        -240
+      ],
+      "id": "9a433a07-2a8d-43c9-97bf-0ca668df2b32",
+      "name": "Low Budget Lead",
+      "webhookId": "58cfb3ac-21c0-4f21-9be8-cfad57edd8df",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "m6WAIGIYybcPUBo7",
+          "name": "Test Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_4740054928864445638"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        740,
+        0
+      ],
+      "id": "59acb522-7b56-4c44-9a7e-5b87520cd439",
+      "name": "Medium Budget Lead",
+      "webhookId": "58cfb3ac-21c0-4f21-9be8-cfad57edd8df",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "m6WAIGIYybcPUBo7",
+          "name": "Test Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_7375168442406673773"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        740,
+        180
+      ],
+      "id": "2da0fcaa-5823-49ca-aa40-d7b0c2786f2c",
+      "name": "High Budget Lead",
+      "webhookId": "58cfb3ac-21c0-4f21-9be8-cfad57edd8df",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "m6WAIGIYybcPUBo7",
+          "name": "Test Account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Low Budget Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Medium Budget Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message2": {
+      "main": [
+        [
+          {
+            "node": "High Budget Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "25a85291-3536-4164-9d98-07b00c625bbd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d7e4ed16f0afafbd7d3e2c7d4a1a4d64e4063ef474e3e58398b070d50efde469"
+  },
+  "id": "7uLTkRYZaCKQU5cq",
+  "tags": []
+}
